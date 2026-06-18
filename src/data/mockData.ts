@@ -185,7 +185,7 @@ export function generateMockApplications(): TravelApplication[] {
       purpose: randomItem(PURPOSES),
       estimatedCosts: { transportation: transport, accommodation: accom, meals, other, total },
       status,
-      approvalFlow: status === 'draft' ? [] : [
+      approvalFlow: (status === 'draft' ? [] : [
         {
           approverId: 'emp010',
           approverName: '郑军',
@@ -198,11 +198,11 @@ export function generateMockApplications(): TravelApplication[] {
           approverId: 'emp013',
           approverName: '林总',
           role: '部门总监',
-          status: status === 'rejected' && i % 5 === 0 ? 'rejected' : (status === 'pending' ? 'pending' as const : 'approved' as const),
+          status: (status === 'rejected' && i % 5 === 0 ? 'rejected' : (status === 'pending' ? 'pending' : 'approved')) as ApprovalNode['status'],
           comment: status === 'rejected' && i % 5 === 0 ? '当前预算紧张，暂缓出差' : '批准出差申请',
           timestamp: `2025-${String(depMonth).padStart(2, '0')}-${String(Math.max(1, depDay - 4)).padStart(2, '0')}T15:00:00`,
         }] : []),
-      ],
+      ]) as ApprovalNode[],
       bookings,
       actualExpenses,
       overBudgetNote: actualOverBudget ? '因客户临时调整需求，延长出差2天，住宿和交通费用相应增加' : null,

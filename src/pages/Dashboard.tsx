@@ -108,14 +108,14 @@ export default function Dashboard() {
           </h2>
           <div className="space-y-3">
             <Link
-              to="/apply"
+              to="/applications/new"
               className="flex items-center gap-3 w-full p-3 rounded-lg bg-gradient-to-r from-navy-500 to-navy-600 text-white hover:from-navy-600 hover:to-navy-700 transition-colors"
             >
               <Plus className="w-4 h-4 text-accent-400" />
               <span className="text-sm">快速发起申请</span>
             </Link>
             <Link
-              to="/book"
+              to="/bookings"
               className="flex items-center gap-3 w-full p-3 rounded-lg bg-gradient-to-r from-navy-400 to-navy-500 text-white hover:from-navy-500 hover:to-navy-600 transition-colors"
             >
               <Plane className="w-4 h-4 text-accent-400" />

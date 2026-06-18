@@ -1,5 +1,5 @@
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, Plane, Hotel, FileText, CircleDot } from 'lucide-react'
+import { ArrowLeft, Plane, Hotel, FileText, CircleDot, CreditCard } from 'lucide-react'
 import { format } from 'date-fns'
 import { useStore } from '@/store'
 import { StatusBadge, SettlementBadge } from '@/components/StatusBadge'
@@ -82,9 +82,40 @@ export default function ApplicationDetail() {
 
       <Card title="关联预订">
         {app.bookings.length === 0 ? (
-          <p className="text-sm text-surface-300">暂无预订记录</p>
-        ) : (
           <div className="space-y-3">
+            <p className="text-sm text-surface-300">暂无预订记录</p>
+            {app.status === 'approved' && (
+              <Link to="/bookings"
+                className="inline-flex items-center gap-1 px-4 py-2 rounded-lg text-xs font-medium bg-navy-500 text-white hover:bg-navy-600 transition-colors">
+                去预订中心 →
+              </Link>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {(() => {
+              const total = app.bookings.reduce((sum, b) => {
+                const d = b.details as any
+                const p = Number(d.price) || 0
+                const n = b.type === 'hotel' ? (Number(d.nights) || 1) : 1
+                return sum + p * n
+              }, 0)
+              return (
+                <div className="flex items-center justify-between p-3 bg-accent-50 rounded-lg border border-accent-100">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-accent-400 flex items-center justify-center">
+                      <CreditCard className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-accent-500">预订总费用</p>
+                      <p className="text-sm text-navy-500">共 {app.bookings.length} 笔预订</p>
+                    </div>
+                  </div>
+                  <span className="font-mono font-bold text-xl text-accent-500">¥{total.toLocaleString()}</span>
+                </div>
+              )
+            })()}
+            <div className="space-y-3">
             {app.bookings.map(bk => bk.type === 'flight' ? (
               <BookingItem key={bk.id} icon={<Plane className="w-4 h-4" />} label="机票">
                 <FlightInfo detail={bk.details as FlightDetail} />
@@ -94,6 +125,7 @@ export default function ApplicationDetail() {
                 <HotelInfo detail={bk.details as HotelDetail} />
               </BookingItem>
             ))}
+          </div>
           </div>
         )}
       </Card>
